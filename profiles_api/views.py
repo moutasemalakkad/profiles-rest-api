@@ -2,8 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+
 
 from profiles_api import serializer
+from profiles_api import models
+from  profiles_api import permissions
 
 #from rest_framework import authentication, permissions
 #from django.contrib.auth.models import User
@@ -94,3 +98,15 @@ class HelloViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         """ deletes an object"""
         return Response({'http_method' : 'DELETE'})
+
+
+
+###########################################################
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """handles creating and updating profiles"""
+    print('hola')
+    serializer_class = serializer.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+
+    authentication_classes = (TokenAuthentication, )
+    permission_classes    = (permissions.UpdateOwnProfile,)
