@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
+from django.conf import settings
 
 class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
@@ -57,3 +57,17 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return string represetnations of our user"""
         return self.email
+
+
+class ProfileFeedItem(models.Model):
+    """profile status update"""
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL, # profiles_api.UserProfile
+        on_delete = models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__ (self):
+        """return the model as a string"""
+        return self.status_text
